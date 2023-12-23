@@ -1,0 +1,35 @@
+﻿<h1>Usuários</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><a routerLink="add" class="btn btn-sm btn-success mb-2">Adicionar Usuário</a></th>
+            <th>Nome</th>
+            <th>Sobrenome</th>
+            <th>Email</th>
+            <th>Nascimento</th>
+            <th>Escolaridade</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let usuario of usuarios">
+            <td style="white-space: nowrap">
+                <a routerLink="edit/{{usuario.id}}" class="btn btn-sm btn-primary me-1">Edit</a>
+                <button (click)="deleteUser(usuario.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="usuario.isDeleting">
+                    <span *ngIf="usuario.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!usuario.isDeleting">Delete</span>
+                </button>
+            </td>            
+            <td>{{usuario.nome}}</td>
+            <td>{{usuario.sobrenome}}</td>
+            <td>{{usuario.email}}</td>
+            <td>{{usuario.dataNascimento | date: 'dd/MM/yyyy'}}</td>
+            <td>{{usuario.escolaridade?.nome}}</td>
+        </tr>
+        <tr *ngIf="!usuarios">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<!-- <pagination-controls></pagination-controls> -->

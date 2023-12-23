@@ -1,0 +1,57 @@
+﻿<h1>Logins</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><a routerLink="add" class="btn btn-sm btn-success mb-2">Adicionar login</a></th>
+            <!-- <th>id</th> -->
+            <th>userName</th>
+            <!-- <th>normalizedUserName</th> -->
+            <th>Email</th>
+            <!-- <th>normalizedEmail</th> -->
+            <th>Email Confirmed</th>
+            <!-- <th>passwordHash</th> -->
+            <!-- <th>securityStamp</th> -->
+            <!-- <th>concurrencyStamp</th> -->
+            <th>Phone Number Confirmed</th>
+            <th>Two Factor Enabled</th>
+            <!-- <th>lockoutEnd</th> -->
+            <th>Lockout Enabled</th>
+            <th>Access Failed Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users">
+            <td style="white-space: nowrap">
+                <a routerLink="edit/{{user.id}}" class="btn btn-sm btn-primary me-1">Editar</a>
+                <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
+                    <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!user.isDeleting">Deletar</span>
+                </button>
+            </td>            
+            <!-- <td>{{user.id}}</td> -->
+            <td>{{user.userName}}</td>
+            <!-- <td>{{user.normalizedUserName}}</td> -->
+            <td>{{user.email}}</td>
+            <!-- <td>{{user.normalizedEmail}}</td> -->
+            <td>{{user.emailConfirmed}}</td>
+            <!-- <td>{{user.passwordHash}}</td> -->
+            <!-- <td>{{user.securityStamp}}</td> -->
+            <!-- <td>{{user.concurrencyStamp}}</td> -->
+            <td>{{user.phoneNumberConfirmed}}</td>
+            <td>{{user.twoFactorEnabled}}</td>
+            <!-- <td>{{user.lockoutEnd}}</td> -->
+            <td>{{user.lockoutEnabled}}</td>
+            <td>{{user.accessFailedCount}}</td>
+           
+            <!-- <td>{{user.userName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.username}}</td>-->
+        </tr>
+        <tr *ngIf="!users">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<!-- <pagination-controls></pagination-controls> -->

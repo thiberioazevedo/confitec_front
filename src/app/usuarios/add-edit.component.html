@@ -1,0 +1,123 @@
+﻿<h1>{{title}}</h1>
+<form *ngIf="!loading" [formGroup]="formUsuario" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="mb-3 col">
+            <label class="form-label">Nome</label>
+            <input type="text" formControlName="nome" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nome.errors }" placeholder="Digite o nome" />
+            <div *ngIf="submitted && f.nome.errors" class="invalid-feedback">
+                <div *ngIf="f.nome.errors.required">Nome é requerido</div>
+            </div>
+        </div>
+
+        <div class="mb-3 col">
+            <label class="form-label">Sobrenome</label>
+            <input type="text" formControlName="sobrenome" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sobrenome.errors }" placeholder="Digite o sobrenome" />
+            <div *ngIf="submitted && f.sobrenome.errors" class="invalid-feedback">
+                <div *ngIf="f.sobrenome.errors.required">Sobrenome é requerido</div>
+            </div>
+        </div>
+
+        <div class="mb-3 col">
+            <label class="form-label">Email</label>
+            <input type="email" formControlName="email" class="form-control" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" placeholder="Digite o email" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email é requerido</div>
+                <div *ngIf="f.email.errors.pattern">Email inválido</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3 col">
+            <label class="form-label">Data de Nascimento</label>
+            <input type="date" formControlName="dataNascimento" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dataNascimento.errors }" />
+            <div *ngIf="submitted && f.dataNascimento.errors" class="invalid-feedback">
+                <div *ngIf="f.dataNascimento.errors.required">Data de nascimento é requerida</div>
+            </div>
+        </div>
+
+        <div class="mb-3 col">
+            <label class="form-label">Escolaridade</label>
+            <select id="escolaridadeId" formControlName="escolaridadeId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.escolaridadeId.errors }">   
+                <option *ngFor="let escolaridade_ of escolaridadeArray" [ngValue]="escolaridade_.id">{{escolaridade_.nome}}</option>
+            </select>
+            <div *ngIf="submitted && f.escolaridadeId.errors" class="invalid-feedback">
+                <div *ngIf="f.escolaridadeId.errors.required">Escolaridade é requerida</div>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <button [disabled]="submitting" class="btn btn-primary" (click)="salvaUsuario()">
+                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                Salvar usuário
+            </button>
+            <button [disabled]="submitting" class="btn btn-secondary" (click)="voltar()">
+                Cancelar
+            </button> 
+        </div>
+    </div>
+    &nbsp;
+    <ng-container *ngIf="this.id">
+        <h2>{{isAddAnexo ? "Preencha os campos para adicionar novo histórico escolar" : "Lista de histórico escolar"}}</h2>        
+        <div *ngIf="isAddAnexo" class="row">
+            <div class="mb-3 col">
+                <input *ngIf="!this.file" class="file-input" type="file" (change)="onFileSelected($event)">
+            </div>
+        </div>
+        <div *ngIf="isAddAnexo && this.file" class="row">
+            <div class="mb-3 col">
+                <input type="text" class="form-control" placeholder="Digite o nome do histórico" formControlName="usuarioHistoricoEscolarNome" />    
+            </div>
+        </div>
+        <div *ngIf="isAddAnexo" class="row">
+            <div class="mb-3">
+                <button [disabled]="submitting" *ngIf="this.file && this.formUsuario.value.usuarioHistoricoEscolarNome" [disabled]="submitting" class="btn btn-primary" (click)="salvarAnexo()">
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                    Salvar histórico
+                </button>
+                <button [disabled]="submitting" class="btn btn-secondary" (click)="setIsAddAnexo()">
+                    Cancelar
+                </button>   
+            </div>        
+        </div>
+        <div *ngIf="!isAddAnexo" class="row">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            <button [disabled]="submitting" class="btn btn-primary" (click)="setIsAddAnexo()">
+                                <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                Adicionar novo
+                            </button>                            
+                        </th>
+                        <th>Nome</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuarioHistoricoEscolar of usuario.usuarioHistoricoEscolarCollection!">
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="white-space: nowrap">
+                            <button (click)="download(usuarioHistoricoEscolar!)" class="btn btn-sm btn-secondary">
+                                <span>Download</span>
+                            </button>
+
+                            <button [disabled]="submitting" (click)="deleteUsuarioHistoricoEscolar(usuarioHistoricoEscolar.id!)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="usuarioHistoricoEscolar.isDeleting">
+                                <span *ngIf="usuarioHistoricoEscolar.isDeleting" class="spinner-border spinner-border-sm"></span>
+                                <span *ngIf="!usuarioHistoricoEscolar.isDeleting">Delete</span>
+                            </button>
+                        </td>            
+                        <td class="col-xs-16 col-sm-16 col-md-16 col-lg-16">{{usuarioHistoricoEscolar.nome}}</td>
+                    </tr>
+                    <tr *ngIf="!usuario.usuarioHistoricoEscolarCollection">
+                        <td colspan="2" class="text-center">
+                            <span class="spinner-border spinner-border-lg align-center"></span>
+                        </td>
+                    </tr>        
+                </tbody>
+            </table>
+            <!-- <pagination-controls></pagination-controls>         -->
+        </div>        
+    </ng-container>
+
+</form>
+<div *ngIf="loading" class="text-center m-5">
+    <span class="spinner-border spinner-border-lg align-center"></span>
+</div>
